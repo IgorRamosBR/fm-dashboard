@@ -1,26 +1,33 @@
-import axios from "axios";
-import { resolve } from "path";
-import { CategoryReportModel, ReportModel } from "../models/report";
-import { TransactionModel, TransactionPageModel } from "../models/transaction";
+import { Auth } from "../components/auth/auth";
+import { CategoryReportModel } from "../models/report";
 import { monthCodes } from "../utils/utils";
-import { CategoryApi } from "./category";
 
-const URL = "https://un197wgjrb.execute-api.us-east-1.amazonaws.com/dev/report";
+const URL = "https://w830fgiucg.execute-api.us-east-1.amazonaws.com/dev/report";
+const defaultOptions = {
+    headers: {
+        'Authorization': Auth.getToken(),
+        'Content-Type': 'application/json'
+    },
+};
 
-async function getReport(periods:string[]): Promise<ReportModel> {
-    let categories = await CategoryApi.getCategories();
-    let report: ReportModel = {categories: new Map<string, CategoryReportModel>()}
-
-    fetch(`${URL}?periods=${periods.join(",")}`)
-        .then(response => response.json())
-        .then(response => {return response as ReportModel})
-        .then(rep => categories.forEach(cat => {
-            let categoryReport = rep.categories.get(cat.name)
-            report.categories.set(cat.name, categoryReport ? categoryReport : {} as CategoryReportModel)
-        }))
-    
-    return report
+const getCurrentSixMonths = ():string[] => {   
+    const date = new Date();
+    let month = date.getMonth();
+    if (month < 6) {
+        return monthCodes.slice(0, 6).map(m => m + `-${date.getFullYear()}`)
+    }
+    return monthCodes.slice(7, monthCodes.length).map(m => m + `-${date.getFullYear()}`)
 }
+
+async function getReport(): Promise<CategoryReportModel[]> {
+    let periods = getCurrentSixMonths()
+    return fetch(`${URL}?periods=${periods.join(",")}`, {
+        method: 'GET',
+        ...defaultOptions
+    })
+        .then(response => response.json())
+        .then(response => {return response as CategoryReportModel[]})
+    }
 
 export const ReportApi = {
     getReport,

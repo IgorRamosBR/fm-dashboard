@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BankOutlined, HomeOutlined, TableOutlined, CheckOutlined } from '@ant-design/icons';
-import { Card, Col, Layout, Menu, Row, theme } from 'antd';
+import { Card, Col, Layout, Menu, Row, theme, Typography } from 'antd';
 import './home.css'
 import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 import Budget from '../budget/budget';
 import Category from '../category/category';
+import LoginButton from '../../components/login/login';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Callback } from '../../components/callback/callback';
+import { Auth } from '../../components/auth/auth';
+const { Text } = Typography;
 
 const { Header, Content, Sider } = Layout;
 const menu = [
@@ -14,6 +19,7 @@ const menu = [
     { name: "Investimentos", icon: BankOutlined },
     { name: "Metas", icon: CheckOutlined },
 ]
+
 const routes = [
     {
         path: "/",
@@ -29,6 +35,11 @@ const routes = [
         path: "/categories",
         exact: true,
         main: () => <Category />
+    },
+    {
+        path: "/callback",
+        exact: true,
+        main: () => <Callback />
     }
 ];
 
@@ -36,11 +47,12 @@ const Home: React.FC = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+    const { user, isAuthenticated, isLoading } = useAuth0();
 
     return (
         <Router>
             <Layout>
-                <Sider
+                {isAuthenticated && <Sider
                     breakpoint="lg"
                     collapsedWidth="0"
                     onBreakpoint={(broken) => {
@@ -50,7 +62,12 @@ const Home: React.FC = () => {
                         console.log(collapsed, type);
                     }}
                 >
-                    <div className="logo" />
+                    <div className="logo">
+                        <span style={{ color: 'white' }}>
+                            Olá, {user?.name}
+                        </span>
+
+                    </div>
                     <Menu
                         theme="dark"
                         mode="inline"
@@ -64,21 +81,33 @@ const Home: React.FC = () => {
                         )}
                     />
                 </Sider>
+                }
                 <Layout>
                     <Header style={{ padding: 0, background: colorBgContainer }}>
                         <span style={{ paddingLeft: 40, fontSize: '24px' }}>Finance manager</span>
                     </Header>
                     <Content style={{ margin: '24px 16px 0', height: '800px' }}>
-                        <Switch>
-                            {routes.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    exact={route.exact}
-                                    children={<route.main />}
-                                />
-                            ))}
-                        </Switch>
+                        {!isAuthenticated ?
+                            <>
+                                <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                                    <Text strong>Faça o login antes de utilizar esse site.</Text>
+
+                                </div>
+                                <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                                    <LoginButton />
+                                </div>
+                            </> :
+                            <Switch>
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        exact={route.exact}
+                                        children={<route.main />}
+                                    />
+                                ))}
+                            </Switch>
+                        }
                     </Content>
                 </Layout>
             </Layout>

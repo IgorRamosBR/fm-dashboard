@@ -5,5 +5,6 @@ export interface ReportModel {
 export interface CategoryReportModel {
     name: string;
     total: number;
+    isParent: boolean;
     values: Map<string, number>;
 }

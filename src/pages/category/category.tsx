@@ -1,8 +1,8 @@
-import { Button, Divider, message, Modal, Space } from 'antd'
+import { Button, Divider, message, Space } from 'antd'
 import { PlusOutlined, UploadOutlined, RetweetOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react'
 import AddCategoryModal from './add-category/add-category-modal';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { CategoryApi } from '../../api/category';
 import { CategoryList } from './list-categories/list-categories';
 import { CategoryModel } from '../../models/category';
@@ -13,7 +13,7 @@ const Category: React.FC = () => {
     const { data, isError, isLoading, refetch } = useQuery("category-list", CategoryApi.getCategories);
     const [messageApi, contextHolder] = message.useMessage();
 
-    const queryClient = useQueryClient();
+    //const queryClient = useQueryClient();
 
     useEffect(() => {
         if (isError) {
@@ -22,7 +22,7 @@ const Category: React.FC = () => {
                 content: 'Erro ao buscar categorias',
               });
         }
-    }, [isError])
+    }, [isError, messageApi])
 
 
     const { mutate } = useMutation(

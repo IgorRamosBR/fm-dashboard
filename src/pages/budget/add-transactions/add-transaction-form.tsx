@@ -1,5 +1,5 @@
-import { Button, DatePicker, Form, Input, InputNumber, Radio, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { DatePicker, Form, Input, InputNumber, Radio, Select } from 'antd';
+import React from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { CategoryModel } from '../../../models/category';
@@ -26,7 +26,6 @@ interface Props {
     categories: CategoryModel[]
 }
 function AddTransactionForm({ categories }: Props) {
-    const [categoryOptions, setCategoryOptions] = useState<Options[]>([])
     const [form] = Form.useForm();
 
     return (

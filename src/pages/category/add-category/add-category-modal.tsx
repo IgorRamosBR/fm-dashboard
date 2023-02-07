@@ -1,6 +1,6 @@
-import { Button, Form, Input, InputNumber, Modal, Radio } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { Form, Input, InputNumber, Modal, Radio } from 'antd';
+import React, { useRef } from 'react';
+import { useMutation } from 'react-query';
 import { CategoryApi } from '../../../api/category';
 import { CategoryModel } from '../../../models/category';
 
@@ -30,7 +30,7 @@ export default function AddCategoryModal( { show, onSuccess, onClose }: Props) {
         mutate()
       };
 
-    const queryClient = useQueryClient();
+    //const queryClient = useQueryClient();
 
     const { mutate } = useMutation(
         () => CategoryApi.createCategory(category.current),

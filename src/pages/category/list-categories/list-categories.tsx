@@ -157,7 +157,7 @@ export function CategoryList({data, isLoading, onChange}: Props) {
             setCategories(newCategoryOrder);
             onChange(mapToCategoryModel(newCategoryOrder))
         },
-        [categories, onchange],
+        [categories, onChange],
     );
 
     return (

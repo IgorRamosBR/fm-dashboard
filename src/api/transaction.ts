@@ -1,12 +1,20 @@
-import axios from "axios";
-import { resolve } from "path";
+import { Auth } from "../components/auth/auth";
 import { TransactionModel, TransactionPageModel } from "../models/transaction";
 import { monthCodes } from "../utils/utils";
 
-const URL = "https://un197wgjrb.execute-api.us-east-1.amazonaws.com/dev/transactions";
+const URL = "https://w830fgiucg.execute-api.us-east-1.amazonaws.com/dev/transactions";
+const defaultOptions = {
+    headers: {
+        'Authorization': Auth.getToken(),
+        'Content-Type': 'application/json'
+    },
+};
 
 async function getTransactions(period:string, offset: string): Promise<TransactionPageModel> {
-    return fetch(`${URL}?period=${period}&offset=${offset}`)
+    return fetch(`${URL}?period=${period}&offset=${offset}`, {
+        method: 'GET',
+        ...defaultOptions
+    })
         .then(response => response.json())
         .then(response => {return response as TransactionPageModel})
 }
@@ -14,7 +22,8 @@ async function getTransactions(period:string, offset: string): Promise<Transacti
 async function createTransaction(transaction: TransactionModel) {
     const response = await fetch(URL, {
         method: 'POST',
-          body: JSON.stringify(transaction),
+        body: JSON.stringify(transaction),
+        ...defaultOptions
     })
 }
 
