@@ -1,7 +1,6 @@
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
-import internal from "stream";
 import { CategoryReportModel } from "../../../models/report";
 import { monthCodes, monthNames } from "../../../utils/utils";
 
@@ -65,45 +64,6 @@ const columns: ColumnsType<DataType> = [
         key: "total",
         dataIndex: "total"
     }
-]
-
-const dataSource: DataType[] = [
-    {
-        key: "3",
-        category: "Renda Familiar",
-        month1: 0.0,
-        month2: 0.0,
-        month3: 0.0,
-        month4: 0.0,
-        month5: 0.0,
-        month6: 0.0,
-        total: 0.0,
-        isCategory: true,
-    },
-    {
-        key: "1",
-        category: "Salário Igor",
-        month1: 2000.00,
-        month2: 2000.00,
-        month3: 2000.00,
-        month4: 2000.00,
-        month5: 2000.00,
-        month6: 2000.00,
-        total: 12000.00,
-        isCategory: false,
-    },
-    {
-        key: "2",
-        category: "Salário Camilla",
-        month1: 1000.00,
-        month2: 1000.00,
-        month3: 1000.00,
-        month4: 1000.00,
-        month5: 1000.00,
-        month6: 1000.00,
-        total: 6000.00,
-        isCategory: false,
-    },
 ]
 
 function getMonth(index: number) {
@@ -170,7 +130,7 @@ function TransactionList({ transactions }: Props) {
     }, [transactions])
 
     return (
-        <Table columns={columns} dataSource={rows} />
+        <Table columns={columns} dataSource={rows} pagination={false}/>
     )
 }
 

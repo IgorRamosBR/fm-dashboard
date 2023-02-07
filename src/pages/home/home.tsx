@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BankOutlined, HomeOutlined, TableOutlined, CheckOutlined } from '@ant-design/icons';
-import { Card, Col, Layout, Menu, Row, theme, Typography } from 'antd';
+import { Layout, Menu, theme, Typography } from 'antd';
 import './home.css'
-import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 import Budget from '../budget/budget';
 import Category from '../category/category';
 import LoginButton from '../../components/login/login';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callback } from '../../components/callback/callback';
-import { Auth } from '../../components/auth/auth';
+import { ProtectedRoute } from '../../components/auth/protected-route';
 const { Text } = Typography;
 
 const { Header, Content, Sider } = Layout;
@@ -47,8 +47,8 @@ const Home: React.FC = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
-    const { user, isAuthenticated, isLoading } = useAuth0();
-
+    const { user, isAuthenticated } = useAuth0();
+      
     return (
         <Router>
             <Layout>
@@ -99,11 +99,11 @@ const Home: React.FC = () => {
                             </> :
                             <Switch>
                                 {routes.map((route, index) => (
-                                    <Route
+                                    <ProtectedRoute
                                         key={index}
                                         path={route.path}
                                         exact={route.exact}
-                                        children={<route.main />}
+                                        component={route.main}
                                     />
                                 ))}
                             </Switch>
@@ -114,36 +114,5 @@ const Home: React.FC = () => {
         </Router>
     );
 };
-
-
-const HomeContent: React.FC = () => {
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
-
-    return (
-        <>
-            <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-                <Row gutter={[16, 24]}>
-                    <Col sm={12} md={8}>
-                        <Card bordered={false} style={{ textAlign: 'center', backgroundColor: '#111d2c', height: '200px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <span style={{ color: colorBgContainer, fontSize: '24px', textAlign: 'center' }}>Controle de orçamento familiar</span>
-                        </Card>
-                    </Col>
-                    <Col sm={12} md={8}>
-                        <Card bordered={false} style={{ textAlign: 'center', backgroundColor: '#111d2c', height: '200px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <span style={{ color: colorBgContainer, fontSize: '24px', textAlign: 'center' }}>Investimentos</span>
-                        </Card>
-                    </Col>
-                    <Col sm={12} md={8}>
-                        <Card bordered={false} style={{ textAlign: 'center', backgroundColor: '#111d2c', height: '200px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <span style={{ color: colorBgContainer, fontSize: '24px', textAlign: 'center' }}>Metas</span>
-                        </Card>
-                    </Col>
-                </Row>
-            </div>
-        </>
-    )
-}
 
 export default Home;

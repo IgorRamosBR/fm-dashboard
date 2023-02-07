@@ -1,26 +1,28 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import Home from './pages/home/home';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+import { Auth0ProviderWithHistory } from './auth0-provider-with-history';
 
 const queryClient = new QueryClient()
 
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+
 root.render(
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <Home />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  </BrowserRouter>
-);
+  <React.StrictMode>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Auth0ProviderWithHistory>
+          <Home />
+        </Auth0ProviderWithHistory>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </BrowserRouter>
+  </React.StrictMode>);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
